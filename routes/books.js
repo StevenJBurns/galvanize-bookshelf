@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const humps = require("humps");
 const knex = require("../knex");
 
-const router = express.Router();
+let router = express.Router();
 
 router.get("/", (req, res, next) => {
   knex("books")
