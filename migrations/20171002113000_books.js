@@ -1,7 +1,7 @@
 
 exports.up = function(knex, Promise) {
   return knex.schema.createTable("books", (table) => {
-    table.increments("id");
+    table.increments();
     table.varchar("title", 255).notNullable().defaultTo("");
     table.varchar("author", 255).notNullable().defaultTo("");
     table.varchar("genre", 255).notNullable().defaultTo("");

@@ -1,3 +1,4 @@
+"use strict";
 
 exports.seed = (knex, Promise) => {
   // Deletes ALL existing entries
@@ -5,7 +6,7 @@ exports.seed = (knex, Promise) => {
     .del()
     .then(() => {
       // Inserts seed entries
-      return Promise.all([{
+      return knex("books").insert([{
           id: 1,
           title: 'JavaScript, The Good Parts',
           author: 'Douglas Crockford',
@@ -78,6 +79,7 @@ exports.seed = (knex, Promise) => {
           created_at: new Date('2016-06-26 14:26:16 UTC'),
           updated_at: new Date('2016-06-26 14:26:16 UTC')
         }
-      ]);
-    });
+      ])
+    })
+    .then(() => knex.raw("SELECT setval('books_id_seq', (SELECT MAX(id) FROM books));"))
 };
