@@ -32,18 +32,35 @@ router.post("/", (req, res, next) => {
 
   knex("books")
     .insert(newBook, "*")
-    .then((newNewBook) => {
-      res.send(humps.camelizeKeys(newNewBook[0]))
-    })
+    .then((newNewBook) => res.send(humps.camelizeKeys(newNewBook[0])))
     .catch((err) => next(err))
 });
 
-router.patch("/", (req, res, next) => {
+router.patch("/:id", (req, res, next) => {
+  let requestedID;
 
+  isNaN(req.params.id) ? res.sendStatus(400) : requestedID = Number.parseInt(req.params.id)
+
+  knex("books")
+    .where("id", requestedID)
+    .first()
+    .update(humps.decamelizeKeys(req.body), "*")
+    .then((requestedBook) => res.send(humps.camelizeKeys(requestedBook[0])))
+    .catch((err) => next(err))
 });
 
-router.delete("/", (req, res, next) => {
+router.delete("/:id", (req, res, next) => {
+  let requestedBook;
 
+  knex("books")
+    .where("id", req.params.id)
+    .first()
+    .then((selectedBook) => !selectedBook ? next() : requestedBook = selectedBook)
+    .then(() => {
+      delete requestedBook.id;
+      res.send(humps.camelizeKeys(requestedBook));
+    })
+    .catch((err) => next(err))
 });
 
 // YOUR CODE HERE
