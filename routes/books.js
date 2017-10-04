@@ -24,9 +24,9 @@ router.get("/:id", (req, res, next) => {
 
 router.post("/", (req, res, next) => {
   let newBook =  humps.decamelizeKeys(req.body);
-  let colNames = ["title", "author", "genre", "description", "cover_url"];
+  let tableColumnNames = ["title", "author", "genre", "description", "cover_url"];
 
-  for (let key of colNames) {
+  for (let key of tableColumnNames) {
     if (!newBook.hasOwnProperty(key)) next();
   }
 
@@ -52,6 +52,8 @@ router.patch("/:id", (req, res, next) => {
 router.delete("/:id", (req, res, next) => {
   let requestedBook;
 
+  isNaN(req.params.id) ? res.sendStatus(400) : requestedID = Number.parseInt(req.params.id)
+
   knex("books")
     .where("id", req.params.id)
     .first()
@@ -62,7 +64,5 @@ router.delete("/:id", (req, res, next) => {
     })
     .catch((err) => next(err))
 });
-
-// YOUR CODE HERE
 
 module.exports = router;
